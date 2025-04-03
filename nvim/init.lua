@@ -23,10 +23,43 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 local plugins = {
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+    { 'nvim-telescope/telescope.nvim', tag = '0.1.8', dependencies = { 'nvim-lua/plenary.nvim' }},
+    { "nvim-neo-tree/neo-tree.nvim", branch = "v3.x", dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-tree/nvim-web-devicons",
+            "MunifTanjim/nui.nvim",
+            },
+        lazy = false,
+        opts = {},
+    }
 }
 
 local opts = {}
 require("lazy").setup(plugins, opts)
 
+-- telescope config
+local builtin = require("telescope.builtin")
+vim.keymap.set('n', '<leader>p', builtin.find_files, {})
+vim.keymap.set('n', '<leader>g', builtin.live_grep, {})
+
+-- neotree config
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+require("neo-tree").setup({
+  use_popups_for_input = true,
+  filesystem = {
+    filtered_items = {
+      visible = true,
+      hide_dotfiles = false,
+      hide_gitignored = false,
+    },
+  },
+  hijack_netrw_behavior = "disabled",
+  bind_to_cwd = true,
+  popup_border_style = "NC",
+})
+
+-- catppuccin config
 require("catppuccin").setup()
 vim.cmd.colorscheme "catppuccin"
