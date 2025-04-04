@@ -60,6 +60,27 @@ require("neo-tree").setup({
   popup_border_style = "NC",
 })
 
+local function is_neotree_visible()
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        if vim.bo[buf].filetype == "neo-tree" then
+            return true
+        end
+    end
+    return false
+end
+
+local function neotree_handler()
+    if is_neotree_visible() then
+        vim.cmd("Neotree close")
+    else
+        vim.cmd("Neotree reveal left")
+    end
+end
+
+vim.keymap.set('n', '<C-n>', neotree_handler, { desc = "Toggle Neo-tree" })
+
+
 -- catppuccin config
 require("catppuccin").setup()
 vim.cmd.colorscheme "catppuccin"
