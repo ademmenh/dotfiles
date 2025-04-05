@@ -1,8 +1,8 @@
 vim.g.mapleader = ","
 vim.cmd("set expandtab")
-vim.cmd("set tabstop=4")
-vim.cmd("set softtabstop=4")
-vim.cmd("set shiftwidth=4")
+vim.cmd("set tabstop=2")
+vim.cmd("set softtabstop=2")
+vim.cmd("set shiftwidth=2")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
     if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -15,6 +15,7 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
           { "\nPress any key to exit..." },
         }, true, {})
         vim.fn.getchar()
+
         os.exit(1)
       end
     end
@@ -22,54 +23,89 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 
 local plugins = {
-    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-    { 'nvim-telescope/telescope.nvim', tag = '0.1.8', dependencies = { 'nvim-lua/plenary.nvim' }},
-    { "nvim-neo-tree/neo-tree.nvim", branch = "v3.x", dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-tree/nvim-web-devicons",
-            "MunifTanjim/nui.nvim",
-            },
-        lazy = false,
-        opts = {},
-    }
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  { "nvim-telescope/telescope.nvim", tag = '0.1.8', dependencies = { 'nvim-lua/plenary.nvim' } },
+  { "christoomey/vim-tmux-navigator", lazy = false },
+   { "nvim-neo-tree/neo-tree.nvim", 
+     branch = "v3.x", 
+     dependencies = {
+         "nvim-lua/plenary.nvim",
+         "nvim-tree/nvim-web-devicons",
+         "MunifTanjim/nui.nvim"
+     },
+     lazy = true,
+     opts = {},
+   },
+  {
+        'nvim-lualine/lualine.nvim', dependencies = { 
+        'nvim-tree/nvim-web-devicons' }
+  },
+  {
+      'goolord/alpha-nvim',
+      dependencies = { 'echasnovski/mini.icons' },
+  },
 }
 
 local opts = {}
-require("lazy").setup(plugins, opts)
+require("lazy").setup("plugins")
 
--- telescope config
-local builtin = require("telescope.builtin")
-vim.keymap.set('n', '<leader>p', builtin.find_files, {})
-vim.keymap.set('n', '<leader>g', builtin.live_grep, {})
 
--- neotree config
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+-- local builtin = require("telescope.builtin")
+-- vim.keymap.set('n', '<leader>p', builtin.find_files, {})
+-- vim.keymap.set('n', '<leader>g', builtin.live_grep, {})
 
-require("neo-tree").setup({
-  use_popups_for_input = true,
-  filesystem = {
-    filtered_items = {
-      visible = true,
-      hide_dotfiles = false,
-      hide_gitignored = false,
-    },
-  },
-  hijack_netrw_behavior = "disabled",
-  bind_to_cwd = true,
-  popup_border_style = "NC",
-})
+-- local config = require("nvim-treesitter.configs")
+-- config.setup({
+--    ensure_installed = {"c", "vim", "vimdoc", "query", "markdown", "lua", "javascript", "json", "yaml", "markdown"},
+--    highlight = { enable = true },
+--    ident = { enable = true },
+-- })
 
+-- disable netwr neovim default file explorer
+-- vim.g.loaded_netrw = 1
+-- vim.g.loaded_netrwPlugin = 1
+
+
+-- require("neo-tree").setup({
+--    use_popups_for_input = true,
+--    filesystem = {
+--      filtered_items = {
+--        visible = true,
+--        hide_dotfiles = false,
+--        hide_gitignored = false,
+--      },
+--    },
+--    hijack_netrw_behavior = "disabled",
+--    bind_to_cwd = true, popup_border_style = "NC",
+--    -- Add this to prevent auto-opening
+--    close_if_last_window = true,
+--    window = {
+--      mappings = {
+--        ["<space>"] = "none", -- disable space to open
+--      }
+--    },
+--    -- This prevents Neo-tree from opening automatically
+--    event_handlers = {
+--      {
+--        event = "neo_tree_buffer_enter",
+--        handler = function()
+--          vim.cmd("highlight! NeoTreeDirectoryIcon guibg=NONE")
+--        end,
+--      },
+--    },
+-- })
+
+-- check neotree is visible
 local function is_neotree_visible()
     for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
         local buf = vim.api.nvim_win_get_buf(win)
         if vim.bo[buf].filetype == "neo-tree" then
-            return true
-        end
+            return true end
     end
     return false
 end
 
+-- neotree handler
 local function neotree_handler()
     if is_neotree_visible() then
         vim.cmd("Neotree close")
@@ -78,9 +114,19 @@ local function neotree_handler()
     end
 end
 
-vim.keymap.set('n', '<C-n>', neotree_handler, { desc = "Toggle Neo-tree" })
+-- Neotree keymap
+-- vim.keymap.set('n', '<C-n>', neotree_handler, { desc = "Toggle Neo-tree" })
 
+-- lualine
+-- require('lualine').setup {
+--     options = {
+-- 	icons_enabled = true,
+-- 	theme = 'auto',
+--     }
+-- }
 
--- catppuccin config
-require("catppuccin").setup()
-vim.cmd.colorscheme "catppuccin"
+-- require("catppuccin").setup()
+-- vim.cmd.colorscheme "catppuccin"
+-- vim.opt.termguicolors = true
+-- vim.cmd.colorscheme("github-dark-colorblind")
+
