@@ -1,0 +1,13 @@
+return {
+  "catppuccin/nvim",
+  name = "catppuccin",
+  priority = 1000,
+  config = function ()
+    require('catppuccin').setup()
+    vim.cmd.colorscheme 'catppuccin'
+  end
+}
+
+-- vim.opt.termguicolors = true
+-- vim.cmd.colorscheme("github-dark-colorblind")
+
