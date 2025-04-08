@@ -1,14 +1,14 @@
 return {
     'nvim-lualine/lualine.nvim',
-    dependencies = { 
+    dependencies = {
         'nvim-tree/nvim-web-devicons'
     },
-    config = function () 
+    config = function ()
       require('lualine').setup({
         options = {
           icons_enabled = true,
           theme = 'auto',
-          section_separators = '', 
+          section_separators = '',
           component_separators = '',
           globalstatus = true,
         },
@@ -19,7 +19,7 @@ return {
                   icons_enabled = true,
                   align = 'left',
                   color = { fg = nil },
-                  icon = '  ',
+                  icon = ' ',
                   separator = nil,
                   padding = 2,
               }
@@ -28,10 +28,10 @@ return {
                 {
                     'branch',
                     icon = {
-                      '',
+                      '',
                       color = { fg = nil },
                     },
-                    padding = 2,
+                    padding = 4,
                 }
             },
             lualine_c = {
@@ -39,7 +39,7 @@ return {
                   'buffers',
                   show_filename_only = true,
                   hide_filename_extension = false,
-                  show_modified_status = false,
+                  show_modified_status = true,
                   mode = 0,
                   show_only_active = true,
                   max_length = 1,
