@@ -11,13 +11,9 @@ return {
         animation = true,
         auto_hide = false,
         tabpages = true,
-        -- Enables/disable clickable tabs
-        --  - left-click: go to buffer
-        --  - middle-click: delete buffer
         clickable = true,
-        -- Excludes buffers from the tabline
-        exclude_ft = {'javascript'},
-        exclude_name = {'package.json'},
+        exclude_ft = {},
+        exclude_name = {},
         focus_on_close = 'left',
         -- Hide inactive buffers and file extensions. Other options are `alternate`, `current`, and `visible`.
         hide = {
@@ -35,79 +31,139 @@ return {
             buffer_number = false,
             button = '',
             diagnostics = {
-                [vim.diagnostic.severity.ERROR] = {enabled = true},
-                [vim.diagnostic.severity.WARN] = {enabled = false},
-                [vim.diagnostic.severity.INFO] = {enabled = false},
-                [vim.diagnostic.severity.HINT] = {enabled = true},
+                [vim.diagnostic.severity.ERROR] = {
+                    enabled = true,
+                },
+                [vim.diagnostic.severity.WARN] = {
+                    enabled = true,
+                },
+                [vim.diagnostic.severity.INFO] = {
+                    enabled = true,
+                },
+                [vim.diagnostic.severity.HINT] = {
+                    enabled = true,
+                    icon = "!",
+                },
             },
             gitsigns = {
-                added = {enabled = true, icon = '+'},
-                changed = {enabled = true, icon = '~'},
-                deleted = {enabled = true, icon = '-'},
+                added = {enabled = false, icon = '+'}, -- if enabled, the colors requires to be fix
+                changed = {enabled = false, icon = '~'}, -- if enabled, the colors requires to be fix
+                deleted = {enabled = false, icon = '-'}, -- if enabled, the colors requires to be fix
             },
             filetype = {
-                -- Sets the icon's highlight group.
-                -- If false, will use nvim-web-devicons colors
-                custom_colors = true,
-                -- Requires `nvim-web-devicons` if `true`
+                custom_colors = false,
                 enabled = true,
             },
             separator = {left = '', right = ''},
             -- If true, add an additional separator at the end of the buffer list
-            separator_at_end = true,
+            separator_at_end = false,
             -- Configure the icons on the bufferline when modified or pinned.
             -- Supports all the base icon options.
             modified = {button = '●'},
             pinned = {button = '', filename = true},
-            -- Use a preconfigured buffer appearance— can be 'default', 'powerline', or 'slanted'
             preset = 'default',
             -- Configure the icons on the bufferline based on the visibility of a buffer.
             -- Supports all the base icon options, plus `modified` and `pinned`.
-            alternate = {filetype = {enabled = false}},
-            current = {buffer_index = true},
-            inactive = {button = '×'},
-            visible = {modified = {buffer_number = false}},
+            alternate = {
+                filetype = {
+                    enabled = false
+                }
+            },
+            current = {
+                buffer_index = true
+            },
+            inactive = {
+                button = '×'
+            },
+            visible = {
+                modified = {buffer_number = false}
+            },
         },
         -- If true, new buffers will be inserted at the start/end of the list.
         -- Default is to insert after current buffer.
-        insert_at_end = false,
+        insert_at_end = true,
         insert_at_start = false,
-        maximum_padding = 2,
-        minimum_padding = 2,
+        maximum_padding = 6,
+        minimum_padding = 4,
         -- Sets the maximum buffer name length.
         maximum_length = 16,
         -- Sets the minimum buffer name length.
         minimum_length = 0,
-        -- If set, the letters for each buffer in buffer-pick mode will be
-        -- assigned based on their name. Otherwise or in case all letters are
-        -- already assigned, the behavior is to assign letters in order of
-        -- usability (see order below)
         semantic_letters = true,
         -- Set the filetypes which barbar will offset itself for
         sidebar_filetypes = {
-            -- Use the default values: {event = 'BufWinLeave', text = '', align = 'left'}
-            NvimTree = true,
-            -- Or, specify the text used for the offset:
-            undotree = {
-                text = 'undotree',
-                align = 'center', -- *optionally* specify an alignment (either 'left', 'center', or 'right')
+            ['neo-tree'] = {
+                text = '',
+                event = 'BufWinLeave', -- or 'BufWinEnter'
+                align = 'left',
+                separator = false,
             },
-            -- Or, specify the event which the sidebar executes when leaving:
-            ['neo-tree'] = {event = 'BufWipeout'},
-            -- Or, specify all three
-            Outline = {event = 'BufWinLeave', text = 'symbols-outline', align = 'right'},
+            -- Or, specify all thre
+            Outline = {
+                event = 'BufWinLeave',
+                text = 'symbols-outline',
+                align = 'left'
+            },
         },
         -- New buffer letters are assigned in this order. This order is
-        -- optimal for the qwerty keyboard layout but might need adjustment
-        -- for other layouts.
         letters = 'asdfjkl;ghnmxcvbziowerutyqpASDFJKLGHNMXCVBZIOWERUTYQP',
         -- Sets the name of unnamed buffers. By default format is "[Buffer X]"
-        no_name_title = ' ',
+        no_name_title = 'buffer',
         sort = {
             ignore_case = true,
         }
     },
+
     config = function(_, opts)
+        local cp = require('catppuccin.palettes').get_palette()
+        -- for Active Buffer
+        -- Main tab (filename)
+        vim.api.nvim_set_hl(0, "BufferCurrent", { fg = cp.blue, bg = cp.base, bold = true })
+        -- Modified indicator (●)
+        vim.api.nvim_set_hl(0, "BufferCurrentMod",     { fg = cp.blue, bg = cp.base, bold = true })
+        -- Icon (filetype symbol)
+        vim.api.nvim_set_hl(0, "BufferCurrentIcon",    { fg = cp.blue, bg = cp.yellow})
+        -- Close or modified icon (X or ●)
+        vim.api.nvim_set_hl(0, "BufferCurrentSign",    { fg = cp.blue, bg = cp.base})
+        -- Buffer number
+        vim.api.nvim_set_hl(0, "BufferCurrentIndex",   { fg = cp.blue, bg = cp.base})
+        -- for hints, error, ...
+        vim.api.nvim_set_hl(0, "BufferCurrentHint",   { fg = cp.blue, bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferCurrentError",    { fg = cp.blue, bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferCurrentWarn",  { fg = cp.blue, bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferCurrentInfo",     { fg = cp.blue, bg = cp.base})
+
+        -- for Inactive Buffers
+        vim.api.nvim_set_hl(0, "BufferInactive", { fg = cp.red, bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferInactiveMod",      { fg = cp.red, bg = cp.base })
+        vim.api.nvim_set_hl(0, "BufferInactiveIcon",     { fg = cp.red, bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferInactiveSign",     { fg = cp.red, bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferInactiveIndex",    { fg = cp.red, bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferInactiveHint",  { fg = cp.red, bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferInactiveError",   { fg = cp.red, bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferInactiveWarn", { fg = cp.red, bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferInactiveInfo",    { fg = cp.red, bg = cp.base})
+
+        -- for Visible Buffers
+        vim.api.nvim_set_hl(0, "BufferVisible", { fg = cp.text, bg = cp.base })
+        vim.api.nvim_set_hl(0, "BufferVisibleMod",      { fg = cp.text, bg = cp.base })
+        vim.api.nvim_set_hl(0, "BufferInactiveIcon",     { fg = cp.text, bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferVisibleSign",     { fg = cp.text, bg = cp.base })
+        vim.api.nvim_set_hl(0, "BufferVisibleIndex",    { fg = cp.text, bg = cp.base })
+        vim.api.nvim_set_hl(0, "BufferVisibleHint",     { fg = cp.text, bg = cp.base })
+        vim.api.nvim_set_hl(0, "BufferVisibleError",    { fg = cp.text, bg = cp.base })
+        vim.api.nvim_set_hl(0, "BufferVisibleWarn",  { fg = cp.text, bg = cp.base })
+        vim.api.nvim_set_hl(0, "BufferVisibleInfo",     { fg = cp.text, bg = cp.base })
+
+        -- barbar bg
+        vim.api.nvim_set_hl(0, 'BufferTabpageFill', {bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferOffset", { bg = cp.mantle})
+
+        -- keymap
+        vim.keymap.set('n', '<leader>bp', function()
+            require('bufferline.api').toggle_pin()
+        end, { desc = 'Toggle pin for buffer' })
+
         require('barbar').setup(opts)
     end
 }
