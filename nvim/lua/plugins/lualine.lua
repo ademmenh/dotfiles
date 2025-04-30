@@ -1,63 +1,110 @@
 return {
-    'nvim-lualine/lualine.nvim',
-    dependencies = {
+    'nvim-lualine/lualine.nvim', dependencies = {
         'nvim-tree/nvim-web-devicons'
     },
-    config = function ()
+    config = function()
+        local cp = require('catppuccin.palettes').get_palette()
         require('lualine').setup({
             options = {
                 icons_enabled = true,
                 theme = 'auto',
-                section_separators = '',
-                component_separators = '',
+                section_separators = {
+                    left = '',
+                    right = ''
+                },
+                component_separators = {
+                    left = '',
+                    right = ''
+                },
                 globalstatus = true,
+                disabled_filetypes = {
+                    statusline = {},
+                    winbar = {},
+                },
             },
+
             sections = {
                 lualine_a = {
                     {
                         'mode',
                         icons_enabled = true,
                         align = 'left',
-                        color = { fg = nil },
+                        color = function()
+                            local mode = vim.fn.mode()
+                            if mode == 'n' then
+                                return { fg = cp.bg, bg = cp.red }
+                            elseif mode == 'i' then
+                                return { fg = cp.bg, bg = cp.blue }
+                            elseif mode:match('[vV]') then
+                                return { fg = cp.bg, bg = cp.red }
+                            elseif mode == 'R' then
+                                return { fg = cp.bg, bg = cp.red}
+                            else
+                                return { fg = cp.bg, bg = cp.red }
+                            end
+                        end,
                         icon = ' ',
-                        separator = nil,
+                        separator = { left = '', right = '' },
                         padding = 2,
-                    }
+                    },
                 },
                 lualine_b = {
                     {
                         'branch',
                         icon = {
                             '',
-                            color = { fg = nil },
+                            align = 'left',
                         },
-                        padding = 4,
-                    }
-                },
-                lualine_c = {
-                    {
-                        'buffers',
-                        show_filename_only = true,
-                        hide_filename_extension = false,
-                        show_modified_status = true,
-                        mode = 0,
-                        show_only_active = true,
-                        max_length = 1,
-                        filetype_names = {
-                            TelescopePrompt = 'Telescope',
-                            dashboard = 'Dashboard',
-                            packer = 'Packer',
-                            fzf = 'FZF',
-                            alpha = 'Alpha',
-                            ["neo-tree"] = 'Neo-tree',
-                        },
-                        use_mode_colors = false,
+                        color = function()
+                            local mode = vim.fn.mode()
+                            if mode == 'n' then
+                                return { fg = cp.red, bg = cp.surface_0 }
+                            elseif mode == 'i' then
+                                return { fg = cp.blue, bg = cp.surface_0}
+                            elseif mode:match('[vV]') then
+                                return { fg = cp.red, bg = cp.surface_0}
+                            elseif mode == 'R' then
+                                return { fg = cp.red, bg = cp.surface_0}
+                            else
+                                return { fg = cp.red, bg = cp.surface_0 }
+                            end
+                        end,
+                        separator = { left = '', right = '' },
                         padding = 2,
                     },
                 },
-                lualine_x = {'progress'},
-                lualine_y = {}
+                lualine_c = {},
+                lualine_x = {},
+                lualine_y = {},
+                lualine_z = {
+                    {
+                        'location',
+                        color = function()
+                            local mode = vim.fn.mode()
+                            if mode == 'n' then
+                                return { fg = cp.bg, bg = cp.red }
+                            elseif mode == 'i' then
+                                return { fg = cp.bg, bg = cp.blue }
+                            elseif mode:match('[vV]') then
+                                return { fg = cp.bg, bg = cp.red }
+                            elseif mode == 'R' then
+                                return { fg = cp.bg, bg = cp.red }
+                            else
+                                return { fg = cp.bg, bg = cp.red }
+                            end
+                        end,
+                        padding = 2
+                    }
+                }
             },
+            inactive_sections = {
+                lualine_a = {},
+                lualine_b = {},
+                lualine_c = {},
+                lualine_x = {},
+                lualine_y = {},
+                lualine_z = {}
+            }
         })
     end,
 }
