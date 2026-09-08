@@ -115,49 +115,62 @@ return {
     },
 
     config = function(_, opts)
-        local cp = require('catppuccin.palettes').get_palette()
+        local function hex(color)
+            if not color then return nil end
+            return string.format('#%06x', color)
+        end
+        local function hl_color(hl, key)
+            return hex(vim.api.nvim_get_hl(0, { name = hl, link = false })[key])
+        end
+        -- oxocarbon palette mapped from active highlight groups
+        local blue   = hl_color('Function', 'fg') or '#78a9ff'
+        local red    = hl_color('Error', 'fg')    or '#ee5396'
+        local yellow = hl_color('String', 'fg')   or '#be95ff'
+        local text   = hl_color('Normal', 'fg')   or '#6f6f6f'
+        local base   = hl_color('Normal', 'bg')   or '#161616'
+        local mantle = '#131313'
         -- for Active Buffer
         -- Main tab (filename)
-        vim.api.nvim_set_hl(0, "BufferCurrent", { fg = cp.blue, bg = cp.base, bold = true })
+        vim.api.nvim_set_hl(0, "BufferCurrent", { fg = blue, bg = base, bold = true })
         -- Modified indicator (●)
-        vim.api.nvim_set_hl(0, "BufferCurrentMod",     { fg = cp.blue, bg = cp.base, bold = true })
+        vim.api.nvim_set_hl(0, "BufferCurrentMod",     { fg = blue, bg = base, bold = true })
         -- Icon (filetype symbol)
-        vim.api.nvim_set_hl(0, "BufferCurrentIcon",    { fg = cp.blue, bg = cp.yellow})
+        vim.api.nvim_set_hl(0, "BufferCurrentIcon",    { fg = blue, bg = yellow})
         -- Close or modified icon (X or ●)
-        vim.api.nvim_set_hl(0, "BufferCurrentSign",    { fg = cp.blue, bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferCurrentSign",    { fg = blue, bg = base})
         -- Buffer number
-        vim.api.nvim_set_hl(0, "BufferCurrentIndex",   { fg = cp.blue, bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferCurrentIndex",   { fg = blue, bg = base})
         -- for hints, error, ...
-        vim.api.nvim_set_hl(0, "BufferCurrentHint",   { fg = cp.blue, bg = cp.base})
-        vim.api.nvim_set_hl(0, "BufferCurrentError",    { fg = cp.blue, bg = cp.base})
-        vim.api.nvim_set_hl(0, "BufferCurrentWarn",  { fg = cp.blue, bg = cp.base})
-        vim.api.nvim_set_hl(0, "BufferCurrentInfo",     { fg = cp.blue, bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferCurrentHint",   { fg = blue, bg = base})
+        vim.api.nvim_set_hl(0, "BufferCurrentError",    { fg = blue, bg = base})
+        vim.api.nvim_set_hl(0, "BufferCurrentWarn",  { fg = blue, bg = base})
+        vim.api.nvim_set_hl(0, "BufferCurrentInfo",     { fg = blue, bg = base})
 
         -- for Inactive Buffers
-        vim.api.nvim_set_hl(0, "BufferInactive", { fg = cp.red, bg = cp.base})
-        vim.api.nvim_set_hl(0, "BufferInactiveMod",      { fg = cp.red, bg = cp.base })
-        vim.api.nvim_set_hl(0, "BufferInactiveIcon",     { fg = cp.red, bg = cp.base})
-        vim.api.nvim_set_hl(0, "BufferInactiveSign",     { fg = cp.red, bg = cp.base})
-        vim.api.nvim_set_hl(0, "BufferInactiveIndex",    { fg = cp.red, bg = cp.base})
-        vim.api.nvim_set_hl(0, "BufferInactiveHint",  { fg = cp.red, bg = cp.base})
-        vim.api.nvim_set_hl(0, "BufferInactiveError",   { fg = cp.red, bg = cp.base})
-        vim.api.nvim_set_hl(0, "BufferInactiveWarn", { fg = cp.red, bg = cp.base})
-        vim.api.nvim_set_hl(0, "BufferInactiveInfo",    { fg = cp.red, bg = cp.base})
+        vim.api.nvim_set_hl(0, "BufferInactive", { fg = red, bg = base})
+        vim.api.nvim_set_hl(0, "BufferInactiveMod",      { fg = red, bg = base })
+        vim.api.nvim_set_hl(0, "BufferInactiveIcon",     { fg = red, bg = base})
+        vim.api.nvim_set_hl(0, "BufferInactiveSign",     { fg = red, bg = base})
+        vim.api.nvim_set_hl(0, "BufferInactiveIndex",    { fg = red, bg = base})
+        vim.api.nvim_set_hl(0, "BufferInactiveHint",  { fg = red, bg = base})
+        vim.api.nvim_set_hl(0, "BufferInactiveError",   { fg = red, bg = base})
+        vim.api.nvim_set_hl(0, "BufferInactiveWarn", { fg = red, bg = base})
+        vim.api.nvim_set_hl(0, "BufferInactiveInfo",    { fg = red, bg = base})
 
         -- for Visible Buffers
-        vim.api.nvim_set_hl(0, "BufferVisible", { fg = cp.text, bg = cp.base })
-        vim.api.nvim_set_hl(0, "BufferVisibleMod",      { fg = cp.text, bg = cp.base })
-        vim.api.nvim_set_hl(0, "BufferInactiveIcon",     { fg = cp.text, bg = cp.base})
-        vim.api.nvim_set_hl(0, "BufferVisibleSign",     { fg = cp.text, bg = cp.base })
-        vim.api.nvim_set_hl(0, "BufferVisibleIndex",    { fg = cp.text, bg = cp.base })
-        vim.api.nvim_set_hl(0, "BufferVisibleHint",     { fg = cp.text, bg = cp.base })
-        vim.api.nvim_set_hl(0, "BufferVisibleError",    { fg = cp.text, bg = cp.base })
-        vim.api.nvim_set_hl(0, "BufferVisibleWarn",  { fg = cp.text, bg = cp.base })
-        vim.api.nvim_set_hl(0, "BufferVisibleInfo",     { fg = cp.text, bg = cp.base })
+        vim.api.nvim_set_hl(0, "BufferVisible", { fg = text, bg = base })
+        vim.api.nvim_set_hl(0, "BufferVisibleMod",      { fg = text, bg = base })
+        vim.api.nvim_set_hl(0, "BufferInactiveIcon",     { fg = text, bg = base})
+        vim.api.nvim_set_hl(0, "BufferVisibleSign",     { fg = text, bg = base })
+        vim.api.nvim_set_hl(0, "BufferVisibleIndex",    { fg = text, bg = base })
+        vim.api.nvim_set_hl(0, "BufferVisibleHint",     { fg = text, bg = base })
+        vim.api.nvim_set_hl(0, "BufferVisibleError",    { fg = text, bg = base })
+        vim.api.nvim_set_hl(0, "BufferVisibleWarn",  { fg = text, bg = base })
+        vim.api.nvim_set_hl(0, "BufferVisibleInfo",     { fg = text, bg = base })
 
         -- barbar bg
-        vim.api.nvim_set_hl(0, 'BufferTabpageFill', {bg = cp.base})
-        vim.api.nvim_set_hl(0, "BufferOffset", { bg = cp.mantle})
+        vim.api.nvim_set_hl(0, 'BufferTabpageFill', {bg = base})
+        vim.api.nvim_set_hl(0, "BufferOffset", { bg = mantle})
 
         -- keymap
         vim.keymap.set('n', '<leader>bp', function()

@@ -3,7 +3,18 @@ return {
         'nvim-tree/nvim-web-devicons'
     },
     config = function()
-        local cp = require('catppuccin.palettes').get_palette()
+        local function hex(color)
+            if not color then return nil end
+            return string.format('#%06x', color)
+        end
+        local function hl_color(hl, key)
+            local c = vim.api.nvim_get_hl(0, { name = hl, link = false })[key]
+            return hex(c)
+        end
+        local NORMAL_BG = hl_color('Normal', 'bg') or '#161616'
+        local RED     = hl_color('Error', 'fg')  or '#ee5396'
+        local BLUE    = hl_color('Function', 'fg') or '#78a9ff'
+        local SURFACE = hl_color('Comment', 'fg')  or '#5a5a5a'
         require('lualine').setup({
             options = {
                 icons_enabled = true,
@@ -32,15 +43,15 @@ return {
                         color = function()
                             local mode = vim.fn.mode()
                             if mode == 'n' then
-                                return { fg = cp.bg, bg = cp.red }
+                                return { fg = NORMAL_BG, bg = RED }
                             elseif mode == 'i' then
-                                return { fg = cp.bg, bg = cp.blue }
-                            elseif mode:match('[vV]') then
-                                return { fg = cp.bg, bg = cp.red }
+                                return { fg = NORMAL_BG, bg = BLUE }
+                            elseif mode:match('[vV␖]') then
+                                return { fg = NORMAL_BG, bg = RED }
                             elseif mode == 'R' then
-                                return { fg = cp.bg, bg = cp.red}
+                                return { fg = NORMAL_BG, bg = RED}
                             else
-                                return { fg = cp.bg, bg = cp.red }
+                                return { fg = NORMAL_BG, bg = RED }
                             end
                         end,
                         icon = ' ',
@@ -58,15 +69,15 @@ return {
                         color = function()
                             local mode = vim.fn.mode()
                             if mode == 'n' then
-                                return { fg = cp.red, bg = cp.surface_0 }
+                                return { fg = RED, bg = SURFACE }
                             elseif mode == 'i' then
-                                return { fg = cp.blue, bg = cp.surface_0}
-                            elseif mode:match('[vV]') then
-                                return { fg = cp.red, bg = cp.surface_0}
+                                return { fg = BLUE, bg = SURFACE}
+                            elseif mode:match('[vV␖]') then
+                                return { fg = RED, bg = SURFACE}
                             elseif mode == 'R' then
-                                return { fg = cp.red, bg = cp.surface_0}
+                                return { fg = RED, bg = SURFACE}
                             else
-                                return { fg = cp.red, bg = cp.surface_0 }
+                                return { fg = RED, bg = SURFACE }
                             end
                         end,
                         separator = { left = '', right = '' },
@@ -82,15 +93,15 @@ return {
                         color = function()
                             local mode = vim.fn.mode()
                             if mode == 'n' then
-                                return { fg = cp.bg, bg = cp.red }
+                                return { fg = NORMAL_BG, bg = RED }
                             elseif mode == 'i' then
-                                return { fg = cp.bg, bg = cp.blue }
-                            elseif mode:match('[vV]') then
-                                return { fg = cp.bg, bg = cp.red }
+                                return { fg = NORMAL_BG, bg = BLUE }
+                            elseif mode:match('[vV␖]') then
+                                return { fg = NORMAL_BG, bg = RED }
                             elseif mode == 'R' then
-                                return { fg = cp.bg, bg = cp.red }
+                                return { fg = NORMAL_BG, bg = RED }
                             else
-                                return { fg = cp.bg, bg = cp.red }
+                                return { fg = NORMAL_BG, bg = RED }
                             end
                         end,
                         padding = 2
@@ -108,4 +119,3 @@ return {
         })
     end,
 }
-
