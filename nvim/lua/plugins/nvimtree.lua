@@ -7,6 +7,11 @@ return {
             view = {
                 width = 30,
             },
+            on_attach = function(bufnr)
+                local api = require('nvim-tree.api')
+                api.config.mappings.default_on_attach(bufnr)
+                vim.keymap.set('n', 'H', api.filter.dotfiles.toggle, { buffer = bufnr, desc = 'Toggle dotfiles' })
+            end,
             hijack_directories = {
                 enable = true,
                 auto_open = false,
@@ -33,6 +38,7 @@ return {
             },
             filters = {
                 dotfiles = false,
+                git_ignored = false,
             },
         }
 
