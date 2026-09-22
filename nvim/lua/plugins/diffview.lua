@@ -2,6 +2,12 @@ return {
     "sindrets/diffview.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
+        local set_hl = vim.api.nvim_set_hl
+        set_hl(0, "DiffviewDiffAdd", { bg = "#1e3a1e" })
+        set_hl(0, "DiffviewDiffDelete", { bg = "#3a1e1e" })
+        set_hl(0, "DiffviewDiffChange", { bg = "#3a3a1e" })
+        set_hl(0, "DiffviewDiffText", { bg = "#4a4a2a" })
+
         require("diffview").setup({
             view = {
                 default = {
