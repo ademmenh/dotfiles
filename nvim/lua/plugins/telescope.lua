@@ -1,7 +1,7 @@
 return {
     {
         "nvim-telescope/telescope.nvim",
-        tag = '0.1.8',
+        tag = 'v0.2.2',
         dependencies = { 'nvim-lua/plenary.nvim' },
         config = function ()
             local telescope = require("telescope.builtin")
